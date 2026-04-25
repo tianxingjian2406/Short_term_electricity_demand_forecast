@@ -1,0 +1,288 @@
+# Electricity Load Forecasting｜电力负荷预测
+
+本项目基于历史电力负荷时间序列数据，构建多模型预测流程，用于预测未来时刻的电力负荷需求。项目重点关注时间序列任务中的数据泄漏控制、特征工程、模型对比、加权融合、误差分析和结果可视化。
+
+> 当前版本对应 notebook：`electricityD_final_annotated.ipynb`  
+> 主要预测目标：`nat_demand`  
+> 时间字段：`datetime`
+
+---
+
+## 1. Project Overview｜项目简介
+
+电力负荷具有明显的时间依赖性、日周期、周周期和阶段性波动。与普通回归任务不同，电力负荷预测不能随机划分训练集和测试集，否则容易引入未来信息，造成数据泄漏。
+
+本项目采用严格的时间顺序划分方式，将数据划分为：
+
+- 训练集：用于模型拟合；
+- 验证集：用于模型筛选与融合权重确定；
+- 测试集：仅用于最终泛化能力评估。
+
+项目完整覆盖从数据读取、探索性分析、特征工程、模型训练、融合建模到可视化解释的全流程，适合作为时间序列预测课程项目、机器学习实践项目或电力负荷预测案例。
+
+---
+
+## 2. Dataset｜数据说明
+
+默认数据文件名称为：
+
+```text
+continuous dataset.csv
+```
+
+数据文件需要放在 notebook 同级目录下。
+
+至少需要包含以下字段：
+
+| 字段名 | 含义 |
+|---|---|
+| `datetime` | 时间列，用于按时间顺序排序、划分数据集和构造时间特征 |
+| `nat_demand` | 电力负荷需求，作为模型预测目标变量 |
+
+如果数据文件名称或字段名称不同，可以在 notebook 的全局配置部分修改：
+
+```python
+DATA_PATH = Path("continuous dataset.csv")
+DATETIME_COL = "datetime"
+TARGET_COL = "nat_demand"
+```
+
+---
+
+## 3. Methodology｜方法流程
+
+整体建模流程如下：
+
+1. **数据读取与时间解析**  
+   将时间列转换为 `datetime` 类型，并按时间顺序排序。
+
+2. **探索性数据分析（EDA）**  
+   观察电力负荷的整体变化趋势、小时规律和星期规律。
+
+3. **数据清洗**  
+   处理缺失值、无穷值和异常值，保证模型输入稳定。
+
+4. **特征工程**  
+   构造日历特征、周期编码特征、滞后特征、滚动统计特征和历史变化特征。
+
+5. **时间序列数据划分**  
+   按时间顺序划分训练集、验证集和测试集，避免未来信息泄漏。
+
+6. **模型训练与评估**  
+   训练多个基准模型和机器学习模型，并在验证集和测试集上评估。
+
+7. **加权融合建模**  
+   根据验证集 RMSE 表现筛选候选模型，并构建加权融合模型。
+
+8. **可视化与误差分析**  
+   绘制预测曲线、RMSE 对比图、误差时间序列、误差分布和特征重要性图。
+
+9. **结果导出**  
+   保存模型指标表和测试集预测结果，便于后续报告撰写和复核。
+
+---
+
+## 4. Feature Engineering｜特征工程
+
+项目中特征工程重点考虑时间序列预测的防泄漏要求。所有由目标变量衍生的特征都只使用预测时刻之前的历史信息。
+
+主要特征包括：
+
+| 特征类型 | 示例 | 说明 |
+|---|---|---|
+| 日历特征 | hour, dayofweek, month | 捕捉负荷的小时、星期和月份规律 |
+| 周期编码 | sin_hour, cos_hour | 将周期变量转换为连续周期表达 |
+| 滞后特征 | lag_1, lag_24, lag_168 | 使用历史负荷作为预测依据 |
+| 滚动统计特征 | rolling_mean, rolling_std | 捕捉近期负荷水平和波动 |
+| 历史变化特征 | diff_1, diff_24 | 描述负荷相对历史时刻的变化 |
+
+特别注意：  
+差分、滚动统计等目标变量衍生特征需要先 `shift(1)`，再计算统计量，确保模型不会使用当前时刻真实值预测当前时刻。
+
+---
+
+## 5. Models｜模型说明
+
+本项目包含以下模型：
+
+| 模型 | 说明 |
+|---|---|
+| `Baseline_lag24` | 使用 24 小时前的负荷作为当前预测值，作为简单基准模型 |
+| `Ridge` | 线性回归模型，加入 L2 正则化，适合作为稳定基线 |
+| `XGBoost` | 梯度提升树模型，适合处理非线性特征关系 |
+| `LightGBM` | 高效梯度提升树模型，训练速度快，常用于表格数据 |
+| `CatBoost` | 梯度提升树模型，对类别特征和非线性关系有较好处理能力 |
+| `LSTM` | 可选深度学习模型，用于捕捉序列依赖 |
+| `Weighted_Ensemble` | 基于验证集 RMSE 表现的加权融合模型 |
+
+其中，`XGBoost`、`LightGBM`、`CatBoost` 和 `TensorFlow/Keras` 为可选依赖。如果本地未安装，notebook 会自动跳过对应模型。
+
+---
+
+## 6. Evaluation Metrics｜评价指标
+
+项目使用三个指标评价预测效果：
+
+### MAE
+
+MAE 是平均绝对误差，表示模型平均每个时间点预测偏离真实值多少。  
+MAE 越低，说明整体平均误差越小。
+
+### RMSE
+
+RMSE 是均方根误差，会对大误差给予更高惩罚。  
+在电力负荷预测中，高峰期和突变时段的预测偏差通常更重要，因此 RMSE 是本项目的核心评价指标之一。
+
+### MAPE
+
+MAPE 是平均绝对百分比误差，表示预测误差占真实负荷的比例。  
+例如 MAPE 为 1.5%，可以理解为平均预测偏差约为真实负荷的 1.5%。
+
+模型选择时，建议优先参考测试集表现，尤其是测试集 RMSE，同时结合 MAE 和 MAPE 综合判断。
+
+---
+
+## 7. Visualization｜可视化说明
+
+notebook 中包含以下可视化内容：
+
+| 图表 | 作用 |
+|---|---|
+| 负荷时间序列图 | 观察负荷整体趋势和异常波动 |
+| 小时平均负荷图 | 分析一天内不同小时的负荷规律 |
+| 星期平均负荷图 | 分析工作日和周末的负荷差异 |
+| 测试集预测对比图 | 比较真实值与各模型预测曲线 |
+| 测试集 RMSE 柱状图 | 直观比较不同模型测试集误差 |
+| 绝对误差时间序列图 | 定位模型预测困难的时间段 |
+| 误差分布直方图 | 判断模型是否存在系统性高估或低估 |
+| 特征重要性图 | 解释树模型主要依赖的输入特征 |
+
+可视化部分不仅用于展示结果，也用于发现模型进一步优化方向，例如是否需要加入天气、节假日或特殊事件变量。
+
+---
+
+## 8. Output Files｜输出文件
+
+运行 notebook 后会生成两个主要结果文件：
+
+```text
+model_comparison_results3.csv
+test_predictions3.csv
+```
+
+文件说明：
+
+| 文件名 | 内容 |
+|---|---|
+| `model_comparison_results3.csv` | 各模型在验证集和测试集上的 MAE、RMSE、MAPE |
+| `test_predictions3.csv` | 测试集真实值和各模型预测值 |
+
+建议在报告或论文中优先引用测试集结果作为最终模型表现。
+
+---
+
+## 9. Environment｜运行环境
+
+建议使用 Python 3.9 或以上版本。
+
+核心依赖：
+
+```bash
+pip install numpy pandas matplotlib scikit-learn
+```
+
+可选模型依赖：
+
+```bash
+pip install xgboost lightgbm catboost tensorflow
+```
+
+如果只想运行基础模型和 Ridge，可以不安装可选依赖。  
+如果需要完整复现实验结果，建议安装全部依赖。
+
+---
+
+## 10. How to Run｜运行方式
+
+1. 克隆项目：
+
+```bash
+git clone <your-repository-url>
+cd <your-repository-name>
+```
+
+2. 安装依赖：
+
+```bash
+pip install numpy pandas matplotlib scikit-learn xgboost lightgbm catboost tensorflow
+```
+
+3. 将数据文件放入项目根目录：
+
+```text
+continuous dataset.csv
+```
+
+4. 打开 notebook：
+
+```bash
+jupyter notebook electricityD_final_annotated.ipynb
+```
+
+或使用 JupyterLab：
+
+```bash
+jupyter lab
+```
+
+5. 按顺序运行所有单元格。
+
+---
+
+## 11. Recommended Repository Structure｜推荐项目结构
+
+```text
+.
+├── electricityD_final_annotated.ipynb
+├── continuous dataset.csv
+├── model_comparison_results3.csv
+├── test_predictions3.csv
+├── README.md
+└── requirements.txt
+```
+
+说明：
+
+- `continuous dataset.csv` 为原始数据文件；
+- `model_comparison_results3.csv` 和 `test_predictions3.csv` 为运行后自动生成的结果文件；
+- 如果数据涉及隐私或版权限制，可以不上传原始数据，只在 README 中说明数据来源和字段格式。
+
+---
+
+## 12. Notes｜注意事项
+
+- 时间序列预测任务不能随机打乱数据后划分训练集和测试集。
+- 所有目标变量衍生特征必须避免使用当前或未来真实值。
+- 验证集可用于模型筛选，但最终模型优劣应以测试集结果为主。
+- 融合模型不一定总是优于单模型，应根据测试集 MAE、RMSE、MAPE 综合判断。
+- 若误差集中在特定日期、节假日或高峰时段，建议补充外部变量进一步优化。
+
+---
+
+## 13. Future Work｜后续优化方向
+
+后续可以从以下方向继续改进：
+
+1. 引入天气变量，例如温度、湿度、降雨量等；
+2. 引入节假日、工作日类型和特殊事件变量；
+3. 使用 Optuna、随机搜索或贝叶斯优化进行系统调参；
+4. 针对高误差时间段进行专项建模；
+5. 对比更多时间序列模型，例如 Prophet、SARIMAX、Temporal Fusion Transformer 等；
+6. 将 notebook 流程封装为可复用 Python 脚本或训练管线。
+
+---
+
+## 14. License｜许可证
+
+本项目可根据实际需求选择开源许可证，例如 MIT License。  
+如果数据集存在使用限制，请在上传 GitHub 前确认数据是否允许公开。
