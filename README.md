@@ -186,15 +186,17 @@ test_predictions3.csv
 
 ---
 
-## 11. Recommended Repository Structure｜推荐项目结构
+## 11. Repository Structure｜项目结构
 
 ```text
 .
-├── electricityD_final_annotated.ipynb
+├── electricity.ipynb
 ├── continuous dataset.csv
-├── model_comparison_results3.csv
-├── test_predictions3.csv
+├── model_comparison_results.csv
+├── test_predictions.csv
 ├── README.md
+├── PROJECT_STRUCTURE_AND_RUN.md
+├── environment.yml
 └── requirements.txt
 ```
 
@@ -202,7 +204,6 @@ test_predictions3.csv
 
 - `continuous dataset.csv` 为原始数据文件；
 - `model_comparison_results3.csv` 和 `test_predictions3.csv` 为运行后自动生成的结果文件；
-- 如果数据涉及隐私或版权限制，可以不上传原始数据，只在 README 中说明数据来源和字段格式。
 
 ---
 
@@ -215,21 +216,3 @@ test_predictions3.csv
 - 若误差集中在特定日期、节假日或高峰时段，建议补充外部变量进一步优化。
 
 ---
-
-## 13. Future Work｜后续优化方向
-
-后续可以从以下方向继续改进：
-
-1. 引入天气变量，例如温度、湿度、降雨量等；
-2. 引入节假日、工作日类型和特殊事件变量；
-3. 使用 Optuna、随机搜索或贝叶斯优化进行系统调参；
-4. 针对高误差时间段进行专项建模；
-5. 对比更多时间序列模型，例如 Prophet、SARIMAX、Temporal Fusion Transformer 等；
-6. 将 notebook 流程封装为可复用 Python 脚本或训练管线。
-
----
-
-## 14. License｜许可证
-
-本项目可根据实际需求选择开源许可证，例如 MIT License。  
-如果数据集存在使用限制，请在上传 GitHub 前确认数据是否允许公开。
