@@ -1,2 +1,0 @@
-# Short_term_electricity_demand_forecast
-Regional power load forecasting project
