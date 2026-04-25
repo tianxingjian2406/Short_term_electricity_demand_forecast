@@ -180,61 +180,9 @@ test_predictions3.csv
 
 ---
 
-## 9. Environment｜运行环境
+## 9. Environment｜运行环境 & How to Run｜运行方式
 
-建议使用 Python 3.9 或以上版本。
-
-核心依赖：
-
-```bash
-pip install numpy pandas matplotlib scikit-learn
-```
-
-可选模型依赖：
-
-```bash
-pip install xgboost lightgbm catboost tensorflow
-```
-
-如果只想运行基础模型和 Ridge，可以不安装可选依赖。  
-如果需要完整复现实验结果，建议安装全部依赖。
-更多依赖在environment.yml中
----
-
-## 10. How to Run｜运行方式
-
-1. 克隆项目：
-
-```bash
-git clone <your-repository-url>
-cd <your-repository-name>
-```
-
-2. 安装依赖：
-
-```bash
-pip install numpy pandas matplotlib scikit-learn xgboost lightgbm catboost tensorflow
-```
-
-3. 将数据文件放入项目根目录：
-
-```text
-continuous dataset.csv
-```
-
-4. 打开 notebook：
-
-```bash
-jupyter notebook electricityD_final_annotated.ipynb
-```
-
-或使用 JupyterLab：
-
-```bash
-jupyter lab
-```
-
-5. 按顺序运行所有单元格。
+具体见PROJECT_STRUCTURE_AND_RUN.md
 
 ---
 
