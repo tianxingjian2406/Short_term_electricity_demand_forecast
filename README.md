@@ -198,7 +198,7 @@ pip install xgboost lightgbm catboost tensorflow
 
 如果只想运行基础模型和 Ridge，可以不安装可选依赖。  
 如果需要完整复现实验结果，建议安装全部依赖。
-
+更多依赖在environment.yml中
 ---
 
 ## 10. How to Run｜运行方式
