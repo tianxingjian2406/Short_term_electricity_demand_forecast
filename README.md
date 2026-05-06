@@ -1,8 +1,8 @@
 # Electricity Load Forecasting｜电力负荷预测⚡
 
+<img alt="Cloudy morning" src="https://github.com/tianxingjian2406/Short_term_electricity_demand_forecast/blob/main/ele.jpeg?raw=true">
 
-
-本项目基于历史电力负荷时间序列数据，构建多模型预测流程，用于预测未来时刻的电力负荷需求。项目重点关注时间序列任务中的数据泄漏控制、特征工程、模型对比、加权融合、误差分析和结果可视化。
+**本项目基于历史电力负荷时间序列数据，构建多模型预测流程，用于预测未来时刻的电力负荷需求。项目重点关注时间序列任务中的数据泄漏控制、特征工程、模型对比、加权融合、误差分析和结果可视化。**
 
 > 主要预测目标：`nat_demand`  
 > 时间字段：`datetime`
