@@ -2,7 +2,6 @@
 
 本项目基于历史电力负荷时间序列数据，构建多模型预测流程，用于预测未来时刻的电力负荷需求。项目重点关注时间序列任务中的数据泄漏控制、特征工程、模型对比、加权融合、误差分析和结果可视化。
 
-> 当前版本对应 notebook：`electricityD_final_annotated.ipynb`  
 > 主要预测目标：`nat_demand`  
 > 时间字段：`datetime`
 
@@ -78,7 +77,7 @@ TARGET_COL = "nat_demand"
    绘制预测曲线、RMSE 对比图、误差时间序列、误差分布和特征重要性图。
 
 9. **结果导出**  
-   保存模型指标表和测试集预测结果，便于后续报告撰写和复核。
+   保存模型指标表和测试集预测结果。
 
 ---
 
@@ -181,73 +180,23 @@ test_predictions3.csv
 
 ---
 
-## 9. Environment｜运行环境
+## 9. Environment｜运行环境 & How to Run｜运行方式
 
-建议使用 Python 3.9 或以上版本。
-
-核心依赖：
-
-```bash
-pip install numpy pandas matplotlib scikit-learn
-```
-
-可选模型依赖：
-
-```bash
-pip install xgboost lightgbm catboost tensorflow
-```
-
-如果只想运行基础模型和 Ridge，可以不安装可选依赖。  
-如果需要完整复现实验结果，建议安装全部依赖。
+具体见PROJECT_STRUCTURE_AND_RUN.md
 
 ---
 
-## 10. How to Run｜运行方式
-
-1. 克隆项目：
-
-```bash
-git clone <your-repository-url>
-cd <your-repository-name>
-```
-
-2. 安装依赖：
-
-```bash
-pip install numpy pandas matplotlib scikit-learn xgboost lightgbm catboost tensorflow
-```
-
-3. 将数据文件放入项目根目录：
-
-```text
-continuous dataset.csv
-```
-
-4. 打开 notebook：
-
-```bash
-jupyter notebook electricityD_final_annotated.ipynb
-```
-
-或使用 JupyterLab：
-
-```bash
-jupyter lab
-```
-
-5. 按顺序运行所有单元格。
-
----
-
-## 11. Recommended Repository Structure｜推荐项目结构
+## 11. Repository Structure｜项目结构
 
 ```text
 .
-├── electricityD_final_annotated.ipynb
+├── electricity.ipynb
 ├── continuous dataset.csv
-├── model_comparison_results3.csv
-├── test_predictions3.csv
+├── model_comparison_results.csv
+├── test_predictions.csv
 ├── README.md
+├── PROJECT_STRUCTURE_AND_RUN.md
+├── environment.yml
 └── requirements.txt
 ```
 
@@ -255,7 +204,6 @@ jupyter lab
 
 - `continuous dataset.csv` 为原始数据文件；
 - `model_comparison_results3.csv` 和 `test_predictions3.csv` 为运行后自动生成的结果文件；
-- 如果数据涉及隐私或版权限制，可以不上传原始数据，只在 README 中说明数据来源和字段格式。
 
 ---
 
@@ -268,21 +216,3 @@ jupyter lab
 - 若误差集中在特定日期、节假日或高峰时段，建议补充外部变量进一步优化。
 
 ---
-
-## 13. Future Work｜后续优化方向
-
-后续可以从以下方向继续改进：
-
-1. 引入天气变量，例如温度、湿度、降雨量等；
-2. 引入节假日、工作日类型和特殊事件变量；
-3. 使用 Optuna、随机搜索或贝叶斯优化进行系统调参；
-4. 针对高误差时间段进行专项建模；
-5. 对比更多时间序列模型，例如 Prophet、SARIMAX、Temporal Fusion Transformer 等；
-6. 将 notebook 流程封装为可复用 Python 脚本或训练管线。
-
----
-
-## 14. License｜许可证
-
-本项目可根据实际需求选择开源许可证，例如 MIT License。  
-如果数据集存在使用限制，请在上传 GitHub 前确认数据是否允许公开。
