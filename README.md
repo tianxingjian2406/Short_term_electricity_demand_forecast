@@ -1,4 +1,6 @@
-# Electricity Load Forecasting｜电力负荷预测
+# Electricity Load Forecasting｜电力负荷预测⚡
+
+
 
 本项目基于历史电力负荷时间序列数据，构建多模型预测流程，用于预测未来时刻的电力负荷需求。项目重点关注时间序列任务中的数据泄漏控制、特征工程、模型对比、加权融合、误差分析和结果可视化。
 
@@ -7,7 +9,7 @@
 
 ---
 
-## 1. Project Overview｜项目简介
+## 1. Project Overview｜项目简介🔭
 
 电力负荷具有明显的时间依赖性、日周期、周周期和阶段性波动。与普通回归任务不同，电力负荷预测不能随机划分训练集和测试集，否则容易引入未来信息，造成数据泄漏。
 
@@ -21,7 +23,7 @@
 
 ---
 
-## 2. Dataset｜数据说明
+## 2. Dataset｜数据说明🌱
 
 默认数据文件名称为：
 
@@ -48,7 +50,7 @@ TARGET_COL = "nat_demand"
 
 ---
 
-## 3. Methodology｜方法流程
+## 3. Methodology｜方法流程📚
 
 整体建模流程如下：
 
@@ -81,7 +83,7 @@ TARGET_COL = "nat_demand"
 
 ---
 
-## 4. Feature Engineering｜特征工程
+## 4. Feature Engineering｜特征工程🔧
 
 项目中特征工程重点考虑时间序列预测的防泄漏要求。所有由目标变量衍生的特征都只使用预测时刻之前的历史信息。
 
@@ -100,7 +102,7 @@ TARGET_COL = "nat_demand"
 
 ---
 
-## 5. Models｜模型说明
+## 5. Models｜模型说明📜
 
 本项目包含以下模型：
 
@@ -118,7 +120,7 @@ TARGET_COL = "nat_demand"
 
 ---
 
-## 6. Evaluation Metrics｜评价指标
+## 6. Evaluation Metrics｜评价指标📋
 
 项目使用三个指标评价预测效果：
 
@@ -141,7 +143,7 @@ MAPE 是平均绝对百分比误差，表示预测误差占真实负荷的比例
 
 ---
 
-## 7. Visualization｜可视化说明
+## 7. Visualization｜可视化说明📊 📈
 
 notebook 中包含以下可视化内容：
 
@@ -160,7 +162,7 @@ notebook 中包含以下可视化内容：
 
 ---
 
-## 8. Output Files｜输出文件
+## 8. Output Files｜输出文件📦
 
 运行 notebook 后会生成两个主要结果文件：
 
@@ -180,13 +182,13 @@ test_predictions3.csv
 
 ---
 
-## 9. Environment｜运行环境 & How to Run｜运行方式
+## 9. Environment｜运行环境 & How to Run｜运行方式⏳
 
 具体见PROJECT_STRUCTURE_AND_RUN.md
 
 ---
 
-## 11. Repository Structure｜项目结构
+## 11. Repository Structure｜项目结构🌳
 
 ```text
 .
@@ -207,7 +209,7 @@ test_predictions3.csv
 
 ---
 
-## 12. Notes｜注意事项
+## 12. Notes｜注意事项🔴
 
 - 时间序列预测任务不能随机打乱数据后划分训练集和测试集。
 - 所有目标变量衍生特征必须避免使用当前或未来真实值。
