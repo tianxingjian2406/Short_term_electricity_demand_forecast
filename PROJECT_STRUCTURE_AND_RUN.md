@@ -62,42 +62,36 @@ tensorflow
 ### 3.1 克隆项目
 
 ```bash
-git clone <your-repository-url>
+git clone <https://github.com/tianxingjian2406/Short_term_electricity_demand_forecast.git>
 cd <your-repository-name>
 ```
 
-### 3.2 创建虚拟环境
+### 3.2 法一：手动创建虚拟环境并安装必需的依赖包（推荐）
 
-使用 `venv`：
+使用 `conda`：
 
 ```bash
-python -m venv .venv
+conda create -n ele python=3.9.25
 ```
 
 激活虚拟环境：
 
-Windows：
-
 ```bash
-.venv\Scripts\activate
+conda activate ele
 ```
 
-macOS / Linux：
-
-```bash
-source .venv/bin/activate
-```
-
-### 3.3 安装依赖
+安装依赖：
 
 ```bash
 pip install -r requirements.txt
 ```
 
-如果 TensorFlow 在本机安装失败，可以先安装除 TensorFlow 外的依赖，并在 notebook 中跳过 LSTM 部分：
+### 3.3 法二：一键完成所有安装工作（但会有一些在此项目无需用到的包）
+
+使用 `conda`：
 
 ```bash
-pip install numpy pandas matplotlib scikit-learn xgboost lightgbm catboost jupyter ipykernel
+conda env create -f environment.yml
 ```
 
 ---
@@ -130,13 +124,7 @@ TARGET_COL = "nat_demand"
 ### 4.2 启动 Jupyter Notebook
 
 ```bash
-jupyter notebook electricityD_final_annotated.ipynb
-```
-
-或者使用 JupyterLab：
-
-```bash
-jupyter lab
+jupyter notebook electricity.ipynb
 ```
 
 打开 notebook 后，按照单元格顺序从上到下运行即可。
