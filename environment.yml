@@ -1,4 +1,4 @@
-name: python_course
+name: ele
 channels:
   - conda-forge
   - defaults
@@ -307,4 +307,3 @@ dependencies:
       - werkzeug==3.1.8
       - widgetsnbextension==4.0.15
       - wrapt==2.1.2
-prefix: C:\Users\Liuxj\miniconda3\envs\python_course
